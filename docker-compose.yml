@@ -1,0 +1,82 @@
+# For more information: https://laravel.com/docs/sail
+version: '3.8'
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '${FORWARD_FRONTEND_PORT:-8080}:8080'
+    volumes:
+      - './frontend:/app'
+      - '/app/node_modules'
+    networks:
+      - sail
+    depends_on:
+      - backend
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '${APP_PORT:-80}:80'
+    environment:
+      APACHE_DOCUMENT_ROOT: /var/www/html/public
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_URL: '${APP_URL:-http://localhost}'
+      # Добавляем все локальные хосты и популярные порты dev-сервера (8080, 5173)
+      SANCTUM_STATEFUL_DOMAINS: 'localhost,127.0.0.1,localhost:8080,127.0.0.1:8080,localhost:80,host.docker.internal'
+      SESSION_DOMAIN: 'localhost'
+      SESSION_SECURE_COOKIE: 'false'
+    volumes:
+      - './backend:/var/www/html'
+    networks:
+      - sail
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: mysql
+    image: 'mysql:8.4'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'laravel'
+      MYSQL_USER: 'sail'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+    volumes:
+      - 'sailmysql:/var/lib/mysql'
+    networks:
+      - sail
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+
+  redis:
+    container_name: redis
+    image: 'redis:alpine'
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'sailredis:/data'
+    networks:
+      - sail
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+
+networks:
+  sail:
+    driver: bridge
+volumes:
+  sailmysql:
+    driver: local
+  sailredis:
+    driver: local

@@ -1,0 +1,84 @@
+# .gitignore for monorepo (Laravel backend + Vue frontend)
+# Root: ignore sensitive and generated files
+.env
+.env.*
+.env.local
+.env.*.local
+/node_modules/
+/dist/
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ---- Backend (Laravel) ----
+# ignore dependencies and build artifacts
+backend/vendor/
+backend/node_modules/
+
+# ignore environment and local secrets
+backend/.env
+backend/.env.*
+
+# storage & cache (keep .gitkeep files)
+backend/storage/app/*
+!backend/storage/app/.gitkeep
+backend/storage/framework/cache/*
+!backend/storage/framework/cache/.gitkeep
+backend/storage/framework/sessions/*
+!backend/storage/framework/sessions/.gitkeep
+backend/storage/framework/views/*
+!backend/storage/framework/views/.gitkeep
+backend/storage/logs/*
+!backend/storage/logs/.gitkeep
+
+# bootstrap cache (but keep .gitkeep)
+backend/bootstrap/cache/*
+!backend/bootstrap/cache/.gitkeep
+
+# composer
+backend/composer.phar
+
+# Laravel test / coverage
+backend/.phpunit.result.cache
+coverage/
+
+# ---- Frontend (Vue) ----
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+frontend/.vite/
+frontend/.parcel-cache/
+frontend/.cache/
+
+# optional: frontend build artifacts at repo root
+/public/
+
+# ---- Docker / CI / tooling ----
+.dockerignore
+docker-compose.override.yml
+docker-compose.override.*.yml
+/.vscode/
+/.idea/
+
+# OS / Editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+*.iml
+
+# misc
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Keep any project-specific keep files if required
+# Add exceptions below if you need to track specific generated files

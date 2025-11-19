@@ -27,7 +27,7 @@ import { createTask, updateTask } from '../services/tasks';
 
 const props = defineProps({ task: Object });
 const emit = defineEmits(['saved', 'cancel']);
-const isEdit = computed(() => !!props.task);
+const isEdit = computed(() => props.task && props.task.id);
 const error = ref(null);
 
 const form = ref({
@@ -64,4 +64,3 @@ async function onSubmit() {
 .input { @apply w-full p-2 border rounded; }
 .btn { @apply w-full p-2 bg-green-500 text-white rounded; margin-top: 8px; }
 </style>
-

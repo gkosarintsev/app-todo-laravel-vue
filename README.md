@@ -16,7 +16,7 @@
 1) Клонировать репозиторий и перейти в папку:
 
 ```bash
-git clone https://github.com/gkosarintsev/app-todo-laravel-vue.git
+git clone https://github.com/gkosarintsev/app-todo-laravel-vue.git && cd app-todo-laravel-vue
 ```
 
 2) Поднять контейнеры Docker:
